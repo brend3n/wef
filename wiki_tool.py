@@ -38,35 +38,34 @@ def strip_link_prefix(link):
 def get_body(link):
 	# Get everything between >[...]<
 	c_link = link[link.index(">") - 5:]
-	# print(c_link)
 	return c_link
 
 def get_all_links(soup):
 	links = []
 	for link in soup.find_all('a'):
-		# l = link.get('href')
-		l = str(link)
-		# print(l)
 		
+		# Convert to string
+		l = str(link)
+		
+		# Strip some tags
 		l = get_body(l)
+
+		# Filter out useless tags
 		if (">links</a>" in l) or (">edit</a>" in l):
 			continue
 		
-		# print(l)
-		# print(l[?:4])
-		# print(l?[len(l) - 8:])
+		# Check to see if tag represents actual page
 		if l[:4] not in l[len(l)-8:]:
-			# print("not in")
 			continue
 		else:
-			# print(l)
+			# Filtering tags to just get body
+			l = l[:len(l) - 4]
+			l = l[6:]
 			links.append(l)
 	
-
+	# Remove last 4 elements from list
 	for i in range(4):
 		links.pop()	
-
-
 
 	return links
 
