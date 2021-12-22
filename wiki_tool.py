@@ -9,7 +9,6 @@ from bs4 import BeautifulSoup
 def create_connect_str(user,pw):
 	return str(f'mongodb+srv://{user}:{pw}@cluster0.bxpu9.mongodb.net/wiki?retryWrites=true&w=majority')
 
-
 def get_soup(url):
     headers = {'User-Agent':'Mozilla/5.0'}
     page = requests.get(url, headers=headers)
@@ -68,6 +67,14 @@ def get_all_links(soup):
 		links.pop()	
 
 	return links
+
+
+def run():
+	url, page_name = get_random_page_url()
+	page = get_soup(url)
+	links = get_all_links(page)
+	# print(links)
+	return page_name, links
 
 '''
 def store(page_name, links):
