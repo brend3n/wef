@@ -141,6 +141,10 @@ def find_shortest_path(source, target, wiki_search,re_path):
                 "parent": child,
                 "children": get_all_links(child)
             }
+            if target in data["children"]:
+                print("Found target.")
+                # re_path = reconstruct_path(source, target, wiki_search, re_path)
+                return re_path
             new_level.append(data)
     wiki_search.append(new_level)
     find_shortest_path(source, target, wiki_search, re_path)
