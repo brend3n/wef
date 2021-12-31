@@ -116,6 +116,8 @@ def find_shortest_path_helper(s,t):
     print(f"Path: {path}")
     return path
 
+
+# ! Need to check if the data structured properly
 # Source is the starting node and the target is the ending node.
 def find_shortest_path(source, target, wiki_search,re_path):
     index = len(wiki_search) - 1
@@ -127,7 +129,7 @@ def find_shortest_path(source, target, wiki_search,re_path):
     for ele in wiki_search[index]:
         if target in ele['children']:
             print(f"Found target: {target}")
-            # re_path = reconstruct_path(source, target, wiki_search, re_path)
+            re_path = reconstruct_path(source, target, wiki_search, re_path)
             return re_path
         else:
             print("Target not found.")
@@ -143,14 +145,31 @@ def find_shortest_path(source, target, wiki_search,re_path):
             }
             if target in data["children"]:
                 print("Found target.")
-                # re_path = reconstruct_path(source, target, wiki_search, re_path)
+                re_path = reconstruct_path(source, target, wiki_search, re_path)
                 return re_path
             new_level.append(data)
     wiki_search.append(new_level)
     find_shortest_path(source, target, wiki_search, re_path)
 
+
+# Not finding the nodes in the middle
 def reconstruct_path(source, target, wiki_search, re_path):
-    pass		
+    path = [target]
+    index = len(wiki_search) - 1
+    print(f"index: {index}")
+    while index >= 0:
+        for page_dict in wiki_search[index]:
+            # print(f"page_dict: {page_dict} ")
+            if target in page_dict["children"]:
+                parent = page_dict["parent"]
+                print(f"parent: {parent}")
+                path.append(page_dict["parent"])
+                index -= 1
+                break
+    
+    path.append(source)
+    print(f"path: {path}")
+    return path.reverse()		
 
 def main():
     # source = str(input("Enter starting page: "))
@@ -160,7 +179,7 @@ def main():
     # print(f"Looking for path from {source} to {target}")
     # find_shortest_path_helper(source, target)
     
-    find_shortest_path_helper("My_(radio_station)", "Nielsen_Holdings")
+    find_shortest_path_helper("University_of_Central_Florida", "Capital_punishment")
   
 
 
