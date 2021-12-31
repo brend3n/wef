@@ -94,6 +94,25 @@ def get_all_links(page_title):
 	return links
 
 
+def nice_print(dict_list):
+    index = 0
+    for ele in dict_list:
+        parent = ele[index]["parent"]
+        children = ele[index]["children"]
+        print(f"Parent: {parent}\nChildren of {parent}: {children}")
+        print("\n")
+        index+=1
+def test_links():
+    wiki_search = [
+        [{"parent":"apple","children": ["phone","orange","pear"]}],
+        [{"parent":"phone","children":[]},
+         {"parent":"orange","children":["color", "fruit"]},
+         {"parent":"pear","children":["dollar", "fish"]}
+        ],
+    ]
+    nice_print(wiki_search)
+    return wiki_search
+
 def find_shortest_path_helper(s,t):
     wiki_search = []
     reconstructed_path = []
@@ -180,7 +199,8 @@ def main():
     # print(f"Looking for path from {source} to {target}")
     # find_shortest_path_helper(source, target)
     
-    find_shortest_path_helper("University_of_Central_Florida", "Capital_punishment")
+    # find_shortest_path_helper("University_of_Central_Florida", "Capital_punishment")
+    test_links()
   
 
 
