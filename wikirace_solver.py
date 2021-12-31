@@ -102,12 +102,15 @@ def find_shortest_path_helper(s,t):
     if t in source_links:
         print(f"Found path {s}->{t}")
         return [s,t]
-    
-    wiki_search.append({
+    data = {
         "parent":s,
         "children":source_links
-    })
-    print(f"wiki_search: {wiki_search}")
+    }
+    data_test = {
+        "test": 1,
+        "test2":2
+    }
+    wiki_search.append([data])
     
     path = find_shortest_path(s,t,wiki_search,reconstructed_path)
     print(f"Path: {path}")
@@ -116,21 +119,24 @@ def find_shortest_path_helper(s,t):
 # Source is the starting node and the target is the ending node.
 def find_shortest_path(source, target, wiki_search,re_path):
     index = len(wiki_search) - 1
+    # print(f"wiki_search: {wiki_search}")
+    # print(f"index: {index}")
+    # print(f"wiki_search[{index}]: {wiki_search[index]}")
 
-    # Look for target
-    info = type(wiki_search[index])
-    print(f"typeof(wiki_search[index]): {info}")
+    # Look for target    
     for ele in wiki_search[index]:
-        print(f"ele: {ele}")
-        if target in ele["children"]:
+        if target in ele['children']:
             print(f"Found target: {target}")
             # re_path = reconstruct_path(source, target, wiki_search, re_path)
             return re_path
-
+        else:
+            print("Target not found.")
     # Target was not found, so get new data and update wiki_search
     new_level = []
     for parent in wiki_search[index]:
+        print(f"Parent: {parent}")
         for child in parent["children"]:
+            print(f"child: {child}")
             data = {
                 "parent": child,
                 "children": get_all_links(child)
@@ -143,13 +149,14 @@ def reconstruct_path(source, target, wiki_search, re_path):
     pass		
 
 def main():
-    source = str(input("Enter starting page: "))
-    target = str(input("Enter target page: "))
+    # source = str(input("Enter starting page: "))
+    # target = str(input("Enter target page: "))
+
     
-    # This was the backtracking solution which we arent going to use
-    #find_path_exec(source, target)
-    print(f"Looking for path from {source} to {target}")
-    find_shortest_path_helper(source, target)
+    # print(f"Looking for path from {source} to {target}")
+    # find_shortest_path_helper(source, target)
+    
+    find_shortest_path_helper("Taiwan", "SARS")
   
 
 
