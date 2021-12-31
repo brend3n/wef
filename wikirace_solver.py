@@ -136,7 +136,7 @@ def find_shortest_path(source, target, wiki_search,re_path):
     # Target was not found, so get new data and update wiki_search
     new_level = []
     for parent in wiki_search[index]:
-        print(f"Parent: {parent}")
+        print(f"Parent: {parent['parent']}")
         for child in parent["children"]:
             print(f"child: {child}")
             data = {
@@ -155,6 +155,7 @@ def find_shortest_path(source, target, wiki_search,re_path):
 # Not finding the nodes in the middle
 def reconstruct_path(source, target, wiki_search, re_path):
     path = [target]
+    print(f"wiki_search: {wiki_search}")
     index = len(wiki_search) - 1
     print(f"index: {index}")
     while index >= 0:
