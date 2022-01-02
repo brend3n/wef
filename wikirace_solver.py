@@ -22,7 +22,7 @@ class Node(object):
         child.parent = self
         self.children.append(child)
     
-    def set_children_from_links(self):
+    def set_children_from_links(self, data):
         
         # Get links
         links = get_all_links(self.data)
@@ -55,18 +55,26 @@ class Wiki_Race_Tree():
         self.root.set_children_from_links()
         
         if self.target in self.root.children:
-            print("Found target")
-            self.reconstruct_path()
+            print("Found target.")
             return
 
         self.construct_tree(self.root)
+        print("Done building tree.")
             
     # Creates the tree that represents the possible paths from a source
     # page to its children pages and grandchildren pages and so on.
     def construct_tree(self, curr_node):
         # Keep adding children until target page is found
         
-        
+        for child in curr_node.children:
+            child.set_children_from_links(child.data)
+            
+            if self.target in child.children:
+                print("Found target.")
+                return
+            
+                
+            
         
         pass
     
@@ -80,7 +88,7 @@ class Wiki_Race_Tree():
     # Runs the algorithm to find the path from the source node to the
     # target node.
     def run(self):
-        self.construct_tree()
+        self.construct_tree_helper()
         self.reconstruct_path()
             
         pass
