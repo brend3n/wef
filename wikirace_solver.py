@@ -13,13 +13,24 @@ class Node(object):
     def __init__(self,data):
         self.data = data
         self.parent = None
-        self.children = None
+        self.children = []
         
-    def add_child(self, obj):
-        self.children.append(obj)
+    def add_child(self, child_data):
+        # Create child node object with its data
+        child = Node(child_data)
+        # Set the parent of this child
+        child.parent = self
+        self.children.append(child)
+    
+    def set_children_from_links(self):
         
-    def set_parent(self, parent):
-        self.parent = parent
+        # Get links
+        links = get_all_links(self.data)
+        
+        # Create new node and assign to parent node
+        for link in links:
+            self.add_child(link)
+
     
     def get_parent(self):
         return self.parent
@@ -29,16 +40,34 @@ class Wiki_Race_Tree():
     # Initializes the tree data structure
     def __init__(self, source, target):
         self.path = None
-        self.root = source
+        self.root = Node(source)
+        self.target = target
         pass
     
     # Prints the contents of the tree
     def print_tree(self):
         pass
     
+    
+    
+    def construct_tree_helper(self):
+        curr_node = self.root
+        self.root.set_children_from_links()
+        
+        if self.target in self.root.children:
+            print("Found target")
+            self.reconstruct_path()
+            return
+
+        self.construct_tree(self.root)
+            
     # Creates the tree that represents the possible paths from a source
     # page to its children pages and grandchildren pages and so on.
-    def construct_tree(self):
+    def construct_tree(self, curr_node):
+        # Keep adding children until target page is found
+        
+        
+        
         pass
     
     # Reconstructs the path take to get to the source to target nodes
@@ -47,10 +76,23 @@ class Wiki_Race_Tree():
         
         
         self.path = path    
+        
+    # Runs the algorithm to find the path from the source node to the
+    # target node.
+    def run(self):
+        self.construct_tree()
+        self.reconstruct_path()
+            
+        pass
     
     # Use selenium to complete the race
-    def do_wiki_race(self, path):
-        pass
+    def do_wiki_race(self):
+        self.run()
+        path = self.path
+        for link in path:
+            # click on link with that title (selenium)
+            pass
+        
     
     
         
@@ -76,92 +118,11 @@ def get_all_links(page_title):
 			links.append(l)
 	return links
 
-
-      
-# Test data to see if logic is correct
-def get_test_links(ele):
-    wiki_search = [
-        [{"parent":"apple","children": ["phone","orange","pear"]}],
-        [{"parent":"phone","children":[]},
-         {"parent":"orange","children":["color", "fruit"]},
-         {"parent":"pear","children":["dollar", "fish"]}
-        ]
-    ]
-    # nice_print(wiki_search)
-    return wiki_search
-
-def find_shortest_path_helper(s,t):
-    wiki_search = []
-    reconstructed_path = []
-    source_links = get_all_links(s)
-    
-    # Check if target is already found on source page.
-    if t in source_links:
-        print(f"Found path {s}->{t}")
-        return [s,t]
-
-    # Source page data
-    data = {
-        "parent":s,
-        "children":source_links
-    }
-    
-    wiki_search.append([data])
-    
-    path = find_shortest_path(s,t,wiki_search,reconstructed_path)
-    
-    print(f"Path: {path}")
-    return path
-
-
-# Source is the starting node and the target is the ending node.
-def find_shortest_path(source, target, wiki_search,re_path):
-    index = len(wiki_search) - 1
-    
-    new_level = []
-    for j in range(len(wiki_search[index])):
-        parent = wiki_search[index][j]["parent"]
-        children_list = wiki_search[index][j]["children"]
-        
-        # Get links for each child of page
-        for child in children_list:
-            data = {
-                "parent": child,
-                "children": get_all_links(child)
-            }
-            print(f"Data for {child}:\n{get_all_links(child)}\n\n\n")
-            new_level.append(data)
-            print(f"new_level: {new_level}")
-            
-            # Check if found target
-            if target in data["children"]:
-                print("Found target.")
-                size_tt = len(wiki_search)
-                print(f"Size wiki_search: {size_tt}")
-                print_levels(wiki_search)
-                nice_print(wiki_search)
-                re_path = []    
-                re_path = reconstruct_path(source, target, wiki_search, re_path)
-                return re_path
-        wiki_search.append(new_level)
-    
-    find_shortest_path(source, target, wiki_search, re_path)   
-
-# ! Working on reconstruction 
-# Not finding the nodes in the middle
-def reconstruct_path(source, target, wiki_search, re_path):
-    return	
-
 def main():
-    # source = str(input("Enter starting page: "))
-    # target = str(input("Enter target page: "))
-
     
-    # print(f"Looking for path from {source} to {target}")
-    # find_shortest_path_helper(source, target)
-    
-    find_shortest_path_helper("University_of_Central_Florida", "Harvard_Law_School")
-    # test_links()
+    tree = Wiki_Race_Tree("University_of_Central_Florida", "Harvard_University")
+    tree.run()
+    # tree.do_wiki_race()
   
 
 
