@@ -32,6 +32,7 @@ def get_all_links(page_title):
 def nice_print(dict_list):
     index = 0
     for i in range(len(dict_list)):
+        print(f"\n\n~~~~Level: {i}~~~~\n\n")
         for j in range(len(dict_list[i])):
             parent = dict_list[i][j]["parent"]
             children = dict_list[i][j]["children"]
@@ -67,6 +68,7 @@ def find_shortest_path_helper(s,t):
     wiki_search.append([data])
     find_shortest_path(s,t, 0)
     
+    path = []
     # path = reconstruct_path(s,t)
     
     print(f"Path: {path}")
@@ -156,9 +158,12 @@ def find_shortest_path(source, target, index):
                 print("Found target.")
                 flag_f = True
                 break
+            
         if flag_f == True:
             break
     wiki_search.append(new_level)
+    size = len(wiki_search)
+    print(f"wiki_search size: {size}")
     print("\nAfter\n")
     nice_print(wiki_search)
     
