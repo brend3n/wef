@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 wiki_search = []
 reconstructed_path = []
 flag = False
+found_flag = False
 
 def get_soup(url):
     # print(f"get_soup({url})")
@@ -156,6 +157,9 @@ def find_shortest_path(source, target, index):
             if target in data["children"]:
                 print("Found target.")
                 flag = True
+                break
+        if flag == True:
+            break
     wiki_search.append(new_level)
     print("\nAfter\n")
     nice_print(wiki_search)
@@ -169,9 +173,11 @@ def find_shortest_path(source, target, index):
     
 # Not finding the nodes in the middle
 def reconstruct_path(source, target):
-    path = []
+    path = [target]
     # Start at the last level in wiki_search
     index = len(wiki_search) - 1
+    # print("Printing wiki_search to see that it isnt fucked")
+    # print(wiki_search)
     print(f"index: {index}")
     while index >= 0:
         for page_dict in wiki_search[index]:
@@ -181,14 +187,18 @@ def reconstruct_path(source, target):
                 print(f"parent: {parent}")
                 path.append(page_dict["parent"])
                 index -= 1
+                found_flag = True
                 break
             else:
                 print("Not found ...")
-                return
-    
+                
+        if found_flag == True:
+            break
     path.append(source)
-    print(f"path: {path}")
-    return path.reverse()		
+    # print(f"path: {path}")
+    path.reverse()
+    # print(f"path: {path}")
+    return path
 
 def main():
     # source = str(input("Enter starting page: "))
@@ -198,7 +208,7 @@ def main():
     # print(f"Looking for path from {source} to {target}")
     # find_shortest_path_helper(source, target)
     
-    find_shortest_path_helper("Ñengo_Flow", "Beluga_Heights_Records")
+    find_shortest_path_helper("Raphael", "Major_religious_groups")
     # test_links()
   
 
