@@ -102,6 +102,7 @@ def nice_print(dict_list):
             parent = dict_list[i][j]["parent"]
             children = dict_list[i][j]["children"]
             print(f"Parent: {parent}\nChildren: {children}\n\n")
+        print("\n")
             
 # Test data to see if logic is correct
 def test_links():
@@ -120,31 +121,33 @@ def find_shortest_path_helper(s,t):
     reconstructed_path = []
     source_links = get_all_links(s)
     
+    # Check if target is already found on source page.
     if t in source_links:
         print(f"Found path {s}->{t}")
         return [s,t]
+
+    # Source page data
     data = {
         "parent":s,
         "children":source_links
     }
-    data_test = {
-        "test": 1,
-        "test2":2
-    }
+    
     wiki_search.append([data])
     
     path = find_shortest_path(s,t,wiki_search,reconstructed_path)
+    
     print(f"Path: {path}")
     return path
 
 
+# Able to find existence of target page but cannot reconstruct path nor
+# is the data structured properly.
+'''
 # ! Need to check if the data structured properly
 # Source is the starting node and the target is the ending node.
 def find_shortest_path(source, target, wiki_search,re_path):
+    
     index = len(wiki_search) - 1
-    # print(f"wiki_search: {wiki_search}")
-    # print(f"index: {index}")
-    # print(f"wiki_search[{index}]: {wiki_search[index]}")
 
     # Look for target    
     for ele in wiki_search[index]:
@@ -154,6 +157,8 @@ def find_shortest_path(source, target, wiki_search,re_path):
             return re_path
         else:
             print("Target not found.")
+            
+            
     # Target was not found, so get new data and update wiki_search
     new_level = []
     for parent in wiki_search[index]:
@@ -169,14 +174,41 @@ def find_shortest_path(source, target, wiki_search,re_path):
                 re_path = reconstruct_path(source, target, wiki_search, re_path)
                 return re_path
             new_level.append(data)
+            
     wiki_search.append(new_level)
     find_shortest_path(source, target, wiki_search, re_path)
-
-
+'''
+# Source is the starting node and the target is the ending node.
+def find_shortest_path(source, target, wiki_search,re_path):
+        
+    new_level = []
+    for i in range(len(wiki_search)):
+        for j in range(len(wiki_search[i])):
+            parent = wiki_search[i][j]["parent"]
+            children_list = wiki_search[i][j]["children"]
+            
+            # Get links for each child of page
+            for child in children_list:
+                data = {
+                    "parent": child,
+                    "children": get_all_links(child)
+                }
+                # Check if found target
+                if target in data["children"]:
+                    print("Found target.")
+                    re_path = reconstruct_path(source, target, wiki_search, re_path)
+                    return re_path
+                new_level.append(data)
+        wiki_search.append(new_level)
+    
+    find_shortest_path(source, target, wiki_search, re_path)   
+    
 # Not finding the nodes in the middle
 def reconstruct_path(source, target, wiki_search, re_path):
     path = [target]
-    print(f"wiki_search: {wiki_search}")
+    print("Showing wiki_search structure:\n")
+    nice_print(wiki_search)
+    return
     index = len(wiki_search) - 1
     print(f"index: {index}")
     while index >= 0:
@@ -201,8 +233,8 @@ def main():
     # print(f"Looking for path from {source} to {target}")
     # find_shortest_path_helper(source, target)
     
-    # find_shortest_path_helper("University_of_Central_Florida", "Capital_punishment")
-    test_links()
+    find_shortest_path_helper("University_of_Central_Florida", "Capital_punishment")
+    # test_links()
   
 
 
