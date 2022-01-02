@@ -169,10 +169,8 @@ def find_shortest_path(source, target, index):
     
 # Not finding the nodes in the middle
 def reconstruct_path(source, target):
-    path = [target]
-    print("Showing wiki_search structure:\n")
-    nice_print(wiki_search)
-    return
+    path = []
+    # Start at the last level in wiki_search
     index = len(wiki_search) - 1
     print(f"index: {index}")
     while index >= 0:
@@ -184,6 +182,9 @@ def reconstruct_path(source, target):
                 path.append(page_dict["parent"])
                 index -= 1
                 break
+            else:
+                print("Not found ...")
+                return
     
     path.append(source)
     print(f"path: {path}")
