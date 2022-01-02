@@ -67,7 +67,7 @@ def find_shortest_path_helper(s,t):
     wiki_search.append([data])
     find_shortest_path(s,t, 0)
     
-    path = reconstruct_path(s,t)
+    # path = reconstruct_path(s,t)
     
     print(f"Path: {path}")
     return path
@@ -190,9 +190,6 @@ def reconstruct_path(source, target):
                 break
             else:
                 print("Not found ...")
-                
-        if found_flag == True:
-            break
     path.append(source)
     # print(f"path: {path}")
     path.reverse()
