@@ -21,16 +21,22 @@ class Node(object):
         # Set the parent of this child
         child.parent = self
         self.children.append(child)
+        print(f"Child: {child.data}")
+        return child
     
     def set_children_from_links(self, data):
-        
         # Get links
-        links = get_all_links(self.data)
+        links = get_all_links(data)
+        children_nodes = []
         
+        print(f"Parent: {data}")
         # Create new node and assign to parent node
         for link in links:
-            self.add_child(link)
-
+            children_nodes.append(self.add_child(link))
+        
+        print("\n")
+        
+        return links, children_nodes
     
     def get_parent(self):
         return self.parent
@@ -49,39 +55,47 @@ class Wiki_Race_Tree():
         pass
     
     
-    
     def construct_tree_helper(self):
-        curr_node = self.root
-        self.root.set_children_from_links()
+        # Set children for root node
+        pages_seen, children = self.root.set_children_from_links(self.root.data)
         
-        if self.target in self.root.children:
+        
+        if self.target in pages_seen:
             print("Found target.")
             return
 
-        self.construct_tree(self.root)
+        self.construct_tree(children, pages_seen)
         print("Done building tree.")
             
     # Creates the tree that represents the possible paths from a source
     # page to its children pages and grandchildren pages and so on.
-    def construct_tree(self, curr_node):
-        # Keep adding children until target page is found
+    def construct_tree(self, children_node_list, pages_seen):
         
-        for child in curr_node.children:
-            child.set_children_from_links(child.data)
+        # Stores all children (Node) on current level
+        new_children = []
+        
+        # Keep adding children until target page is found
+        for child_node in children_node_list:
+            page_data, new_children_temp = child_node.set_children_from_links(child_node.data)
             
-            if self.target in child.children:
+            # Keep track of the titles of the pages seen so we know
+            # when we find the target page
+            pages_seen.append(page_data)
+            
+            # Keep track of child nodes
+            new_children.append(new_children_temp)
+            
+            if self.target in pages_seen:
                 print("Found target.")
                 return
-            
-                
-            
         
-        pass
+        self.construct_tree(new_children, pages_seen) 
     
     # Reconstructs the path take to get to the source to target nodes
     def reconstruct_path(self):
         path = []
         
+        print(f"reconstruct_path()")
         
         self.path = path    
         
