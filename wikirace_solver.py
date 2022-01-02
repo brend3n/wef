@@ -7,70 +7,53 @@ limit = 99999
 # Path not found
 found_path = False
 
-def get_all_parent_links(title, limit):
-    page = f'https://en.wikipedia.org/w/index.php?title=Special:WhatLinksHere/{title}&namespace=0&limit={limit}'
+# Simple Node class
+class Node(object):
+    
+    def __init__(self,data):
+        self.data = data
+        self.parent = None
+        self.children = None
+        
+    def add_child(self, obj):
+        self.children.append(obj)
+        
+    def set_parent(self, parent):
+        self.parent = parent
+    
+    def get_parent(self):
+        return self.parent
 
-    soup = wt.get_soup(page)
-
-    p_links = wt.get_all_links(soup)
-    p_links = list(set(p_links))
-
-    #for link in p_links:
-    #    print(link)
-
-    # print(f"\n\n\nNumber of pages: {len(p_links)}")
-
-    return p_links
-
-# This is a backtracking solution
-"""
-def find_path_exec(source, target):
-    path = []
-    cache = []
-
-    # Add target to the end/beginning of the list
-    path.insert(0, target)
-    cache.append(target)
-
-    # Working backwards -> starting from the target and working backwards
-    parents = get_all_parent_links(target,limit)
-
-    # Found path: [source -> target] with a distance of 1
-    if source in parents:
-        # Add source to path
-        path.insert(0, source)
-        return path
-
-    # Start search for source
-    find_path(source, target, path, cache)
-
-
-def find_path(source, curr_target, path, cache):
-
-    # Get all parents of curr_target
-    parents = get_all_parent_links(curr_target, limit)
-
-    # Source is what we are looking for since we're working backwards
-    if source in parents:
-        path.insert(0,source)
-        print(f"Path found: {path}")
-        found_path = True
-        return
-    else:
-        # If we don't find what we are looking for it
-        for parent in parents:
-            # Don't repeat old links
-            if parent not in cache:
-                # Cache the parent page so we dont visit it again
-                cache.append(parent)
-                # Add it to the path
-                path.insert(0, parent)
-                find_path(source, parent, path, cache)
-                # Remove from path if not
-                path.pop(0)
-                cache.remove(parent)
-"""
-
+class Wiki_Race_Tree():
+    
+    # Initializes the tree data structure
+    def __init__(self, source, target):
+        self.path = None
+        self.root = source
+        pass
+    
+    # Prints the contents of the tree
+    def print_tree(self):
+        pass
+    
+    # Creates the tree that represents the possible paths from a source
+    # page to its children pages and grandchildren pages and so on.
+    def construct_tree(self):
+        pass
+    
+    # Reconstructs the path take to get to the source to target nodes
+    def reconstruct_path(self):
+        path = []
+        
+        
+        self.path = path    
+    
+    # Use selenium to complete the race
+    def do_wiki_race(self, path):
+        pass
+    
+    
+        
 def get_soup(url):
     # print(f"get_soup({url})")
     headers = {'User-Agent':'Mozilla/5.0'}
@@ -94,18 +77,9 @@ def get_all_links(page_title):
 	return links
 
 
-# Works as expected
-def nice_print(dict_list):
-    index = 0
-    for i in range(len(dict_list)):
-        for j in range(len(dict_list[i])):
-            parent = dict_list[i][j]["parent"]
-            children = dict_list[i][j]["children"]
-            print(f"Parent: {parent}\nChildren: {children}\n\n")
-        print("\n")
-            
+      
 # Test data to see if logic is correct
-def test_links():
+def get_test_links(ele):
     wiki_search = [
         [{"parent":"apple","children": ["phone","orange","pear"]}],
         [{"parent":"phone","children":[]},
@@ -113,7 +87,7 @@ def test_links():
          {"parent":"pear","children":["dollar", "fish"]}
         ]
     ]
-    nice_print(wiki_search)
+    # nice_print(wiki_search)
     return wiki_search
 
 def find_shortest_path_helper(s,t):
@@ -140,90 +114,43 @@ def find_shortest_path_helper(s,t):
     return path
 
 
-# Able to find existence of target page but cannot reconstruct path nor
-# is the data structured properly.
-'''
-# ! Need to check if the data structured properly
 # Source is the starting node and the target is the ending node.
 def find_shortest_path(source, target, wiki_search,re_path):
-    
     index = len(wiki_search) - 1
-
-    # Look for target    
-    for ele in wiki_search[index]:
-        if target in ele['children']:
-            print(f"Found target: {target}")
-            re_path = reconstruct_path(source, target, wiki_search, re_path)
-            return re_path
-        else:
-            print("Target not found.")
-            
-            
-    # Target was not found, so get new data and update wiki_search
+    
     new_level = []
-    for parent in wiki_search[index]:
-        print(f"Parent: {parent['parent']}")
-        for child in parent["children"]:
-            print(f"child: {child}")
+    for j in range(len(wiki_search[index])):
+        parent = wiki_search[index][j]["parent"]
+        children_list = wiki_search[index][j]["children"]
+        
+        # Get links for each child of page
+        for child in children_list:
             data = {
                 "parent": child,
                 "children": get_all_links(child)
             }
+            print(f"Data for {child}:\n{get_all_links(child)}\n\n\n")
+            new_level.append(data)
+            print(f"new_level: {new_level}")
+            
+            # Check if found target
             if target in data["children"]:
                 print("Found target.")
+                size_tt = len(wiki_search)
+                print(f"Size wiki_search: {size_tt}")
+                print_levels(wiki_search)
+                nice_print(wiki_search)
+                re_path = []    
                 re_path = reconstruct_path(source, target, wiki_search, re_path)
                 return re_path
-            new_level.append(data)
-            
-    wiki_search.append(new_level)
-    find_shortest_path(source, target, wiki_search, re_path)
-'''
-# Source is the starting node and the target is the ending node.
-def find_shortest_path(source, target, wiki_search,re_path):
-        
-    new_level = []
-    for i in range(len(wiki_search)):
-        for j in range(len(wiki_search[i])):
-            parent = wiki_search[i][j]["parent"]
-            children_list = wiki_search[i][j]["children"]
-            
-            # Get links for each child of page
-            for child in children_list:
-                data = {
-                    "parent": child,
-                    "children": get_all_links(child)
-                }
-                # Check if found target
-                if target in data["children"]:
-                    print("Found target.")
-                    re_path = reconstruct_path(source, target, wiki_search, re_path)
-                    return re_path
-                new_level.append(data)
         wiki_search.append(new_level)
     
     find_shortest_path(source, target, wiki_search, re_path)   
-    
+
+# ! Working on reconstruction 
 # Not finding the nodes in the middle
 def reconstruct_path(source, target, wiki_search, re_path):
-    path = [target]
-    print("Showing wiki_search structure:\n")
-    nice_print(wiki_search)
-    return
-    index = len(wiki_search) - 1
-    print(f"index: {index}")
-    while index >= 0:
-        for page_dict in wiki_search[index]:
-            # print(f"page_dict: {page_dict} ")
-            if target in page_dict["children"]:
-                parent = page_dict["parent"]
-                print(f"parent: {parent}")
-                path.append(page_dict["parent"])
-                index -= 1
-                break
-    
-    path.append(source)
-    print(f"path: {path}")
-    return path.reverse()		
+    return	
 
 def main():
     # source = str(input("Enter starting page: "))
@@ -233,7 +160,7 @@ def main():
     # print(f"Looking for path from {source} to {target}")
     # find_shortest_path_helper(source, target)
     
-    find_shortest_path_helper("University_of_Central_Florida", "Capital_punishment")
+    find_shortest_path_helper("University_of_Central_Florida", "Harvard_Law_School")
     # test_links()
   
 
