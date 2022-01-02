@@ -4,8 +4,6 @@ from bs4 import BeautifulSoup
 
 wiki_search = []
 reconstructed_path = []
-flag = False
-found_flag = False
 
 def get_soup(url):
     # print(f"get_soup({url})")
@@ -142,7 +140,7 @@ def find_shortest_path(source, target, wiki_search,re_path):
     
 # Source is the starting node and the target is the ending node.
 def find_shortest_path(source, target, index):
-    
+    flag_f = False
     print("\nBefore\n")
     nice_print(wiki_search)
     new_level = []
@@ -156,15 +154,15 @@ def find_shortest_path(source, target, index):
             new_level.append(data)
             if target in data["children"]:
                 print("Found target.")
-                flag = True
+                flag_f = True
                 break
-        if flag == True:
+        if flag_f == True:
             break
     wiki_search.append(new_level)
     print("\nAfter\n")
     nice_print(wiki_search)
     
-    if flag == True:
+    if flag_f == True:
         return
     
     find_shortest_path(source,target, index+1)
@@ -173,6 +171,7 @@ def find_shortest_path(source, target, index):
     
 # Not finding the nodes in the middle
 def reconstruct_path(source, target):
+    found_flag = False
     path = [target]
     # Start at the last level in wiki_search
     index = len(wiki_search) - 1
@@ -208,7 +207,7 @@ def main():
     # print(f"Looking for path from {source} to {target}")
     # find_shortest_path_helper(source, target)
     
-    find_shortest_path_helper("Raphael", "Major_religious_groups")
+    find_shortest_path_helper("Ñengo_Flow", "Accessibility")
     # test_links()
   
 
