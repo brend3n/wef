@@ -94,21 +94,23 @@ def get_all_links(page_title):
 	return links
 
 
+# Works as expected
 def nice_print(dict_list):
     index = 0
-    for ele in dict_list:
-        parent = ele[index]["parent"]
-        children = ele[index]["children"]
-        print(f"Parent: {parent}\nChildren of {parent}: {children}")
-        print("\n")
-        index+=1
+    for i in range(len(dict_list)):
+        for j in range(len(dict_list[i])):
+            parent = dict_list[i][j]["parent"]
+            children = dict_list[i][j]["children"]
+            print(f"Parent: {parent}\nChildren: {children}\n\n")
+            
+# Test data to see if logic is correct
 def test_links():
     wiki_search = [
         [{"parent":"apple","children": ["phone","orange","pear"]}],
         [{"parent":"phone","children":[]},
          {"parent":"orange","children":["color", "fruit"]},
          {"parent":"pear","children":["dollar", "fish"]}
-        ],
+        ]
     ]
     nice_print(wiki_search)
     return wiki_search
