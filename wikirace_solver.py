@@ -137,15 +137,12 @@ def reconstruct_path(source, target):
     return path
 
 def main():
-    # source = str(input("Enter starting page: "))
-    # target = str(input("Enter target page: "))
-
+    source = str(input("Enter starting page: "))
+    target = str(input("Enter target page: "))
+    source = source.replace(" ", "_")
+    target = target.replace(" ", "_")
     
-    # print(f"Looking for path from {source} to {target}")
-    # find_shortest_path_helper(source, target)
-    
-    find_shortest_path_helper("Florida", "Aldous_Huxley")
-    # test_links()
+    find_shortest_path_helper(source, target)
   
 
 
