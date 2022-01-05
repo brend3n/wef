@@ -8,7 +8,7 @@ reconstructed_path = []
 def get_soup(url):
     # print(f"get_soup({url})")
     headers = {'User-Agent':'Mozilla/5.0'}
-    page = requests.get(url, headers=headers)
+    page = requests.get(url, headers=headers, timeout=None)
 
     soup = BeautifulSoup(page.content, 'html.parser')
     return soup
